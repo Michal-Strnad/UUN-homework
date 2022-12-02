@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Generator jmen</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+<body>
+    <p>Počet zaměstnanců</p>
+    <input type="text" id="count">
+    <p>Minimální věk</p>
+    <input type="text" id="ageMin">
+    <p>Maximální věk</p>
+    <input type="text" id="ageMax">
+    <button onclick="generate()">Generuj</button>
+
+    <script>
+        const firstNames = ["Pavel","Marek","Jiří","Daniel","Petr","Honza","Milan","Mirek","David","Zdeněk", "Ludmila", "Zdena", "Kateřina", "Lucie", "Marie", "Zdislava", "Veronika", "Lenka", "Natálie", "Božena"]
+        const lastNames = ["Chroust","Dvořák","Novák","Samotný","Vystrčil","Vyskočil","Růžička","Douša","Urban","Přibyl","Chroustová","Dvořáková","Nováková","Samotná","Vystrčilová","Vyskočilová","Růžičková","Doušová","Urbanová","Přibylová"]
+        const workloads = ["10", "20", "30", "40"]
+
+        function generate() {
+            let age = {"min":document.getElementById("ageMin").value, "max":document.getElementById("ageMax").value}
+            let dataIn = {"count":document.getElementById("count").value,"age":age}
+
+            if(parseInt(age.min) < parseInt(age.max)) {
+                if(parseInt(age.min) > 14) {
+                    let dataOut = main(dataIn)
+                    for(let i = 0;i < dataOut.length;i++) {
+                    console.log(dataOut[i])
+                    }
+                } else {
+                    alert("Věk zaměstnance smí být minimálně 15 let")
+                }
+            } else {
+                alert("Minimální věk je vyšší než maximální")
+            }
+        }
+
+        function genNum(y,z) {
+            let x = Math.floor(Math.random() * y + z)
+            return x
+        }
+        function convertDate(tempAge) {
+            var time = new Date()
+            var year = time.getFullYear()
+            year = year-tempAge
+
+            var month = genNum(12, 1)
+            var day = genNum(31, 1)
+
+            tempDate = year+"-"+month+"-"+day+"T00:00:00.000Z"
+            return tempDate
+        }
+
+        function main(dtoIn) {
+            let tempName = ""
+            let tempLastName = ""
+            let tempGender = ""
+            let tempAge = 0
+            let tempWorkload = ""
+            let dtoOut = Array()
+
+            for(let i = 0; i < dtoIn.count;i++) {
+                let x = genNum(20,0)
+                tempName = firstNames[x]
+                if(x > 9) {
+                    x = genNum(10,10)
+                    tempGender = "female"
+                } else {
+                    x = genNum(10,0)
+                    tempGender = "male"
+                }
+                tempLastName = lastNames[x]
+
+                const minAge = parseInt(dtoIn.age.min)
+                const maxAge = parseInt(dtoIn.age.max)
+                tempAge = genNum(maxAge-minAge+1, minAge)
+                let tempDate = convertDate(tempAge)
+
+                tempWorkload = workloads[genNum(4, 0)]
+
+                dtoOut[i] = {"gender":tempGender,"birthdate":tempDate,"name":tempName,"surname":tempLastName,"workload":tempWorkload}
+            }
+            return dtoOut
+        }
+    </script>
+</body>
+</html>

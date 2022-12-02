@@ -1,0 +1,29 @@
+Navrhněte a vytvořte v programovacím jazyce JavaScript program, který vygeneruje seznam zaměstnanců firmy. Váš program bude obsahovat funkci main s jedním argumentem, který bude obsahovat vstupní data dtoIn. Funkce main bude vracet výstupní data dtoOut.
+
+Každý zaměstnanec (Employee) má své křestní jméno (name), přijmení (surname), pohlaví (gender), datum narození (birthdate) a výši pracovního úvazku (workload). Osoby mohou být buď muži (male) nebo ženy (female), úvazek je buď 10, 20, 30 či 40h/týdně. Plný úvazek odpovídá 40h/týdně. Jednotlivé údaje budou generovány náhodně, tj. náhodně vygenerujete jméno, přijmení, datum narození apod. 
+
+Ukázka vstupních dat (dtoIn):
+const dtoIn = {
+  count: 50,
+  age: {
+    min: 19,
+    max: 35
+  }
+
+Ukázka výstupních dat (dtoOut):
+  const dtoOut = [
+  {
+    gender: "male",
+    birthdate: "1993-08-07T00:00:00.000Z",
+    name: "Vratislav",
+    surname: "Sýkora",
+    workload: 40
+  },
+  {
+    gender: "female",
+    birthdate: "2000-01-03T00:00:00.000Z",
+    name: "Jiřina",
+    surname: "Ptáčková",
+    workload: 20
+  }
+]
