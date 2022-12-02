@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Prevod</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+<body>
+    <!--Ovládání-->
+    <input id="numInput" type="text" placeholder="Zadej číslo v původní soustavě">
+    <input id="numSystemIn" type="text" placeholder="Zadej soustavu zadaného čísla">
+    <input id="numSystemOut" type="text" placeholder="Zadej soustavu hledaného čísla">
+    <button onclick="prevod()">Převeď</button>
+    <p>Výsledek:</p>
+    <input id="numOutput" type="text">
+    <!--Program-->
+    <script>
+        function prevod() {
+            //Získání hodnot z ovládání
+            const numInput = document.getElementById("numInput") //původní číslo
+            const numSystemIn = document.getElementById("numSystemIn") //soustava, ze které se má převést
+            const numSystemOut = document.getElementById("numSystemOut") //soustava, do které se má převést
+            const numOutput = document.getElementById("numOutput") //hledané číslo
+            //Vytvoření pomocných proměnných
+            let numSysIn = numSystemIn.value //soustava 1 (čísleně ze stringu)
+            let numSysOut = numSystemOut.value //soustava 2 (číselně ze stringu)
+            let str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" //Pokud bude soustava větší než 10, čísla budou nahrazena písmeny
+//--------------------Výpočet do desítkové soustavy---------------------------
+            let numIn = numInput.value //uložení hodnoty původního čísla do proměnné
+            let numInStr = numIn.toString() //převod na string k určení počtu cifer
+            let numInLength = numInStr.length //počet cifer
+            let tmp = 0 //slouží k uložení mezikroku
+            let numDec = 0 //slouží k uložení konečného výsledku v desítkové soustavě
+        //------------vyhodnocení, zda je převod možný--------------
+            let convert = true
+            //Pokud je číselná soustava vyšší jak 36:
+            if(numSysOut > 36 || numSysIn > 36) {
+                alert("CHYBA, číselná soustava může být maximálně 36")
+                convert=false
+            }
+            //Pokud proběhl minulý test v pořádku, zkontroluj, zda nějaká z cifer není větí, než soustava umožňuje
+            if(convert) {
+                for(let i = numInLength;i>0;i--) {
+                tmp = str.indexOf(numIn.charAt(i-1))
+                if(tmp > (numSysIn-1)) {
+                    convert=false
+                    alert("Některá z cifer je větší než soustava umožňuje")
+                    break
+                }           
+            }
+
+            }
+            //Pokud je vše v pořádku
+            if(convert) {
+                for(let i = numInLength;i>0;i--) { //Vezmi cifru a posuň se o další dál
+                tmp = str.indexOf(numIn.charAt(i-1)) * Math.pow(numSysIn, numInLength-i) //převod na desítkovou
+                numDec = tmp+numDec //zapsání mezikroku ke konečnému výsledku
+                }
+            }
+//--------------------Výpočet z desítkové soustavy---------------------------
+            let tmpResult = "" //zde se uloží výsledek mezikroku
+            let result = "" //zde se uloží konečný výsledek
+            let tmpModulo = 0 //zde se bude ukládat zbytek z dělení
+            //Pokud je zadána 0:
+            if(numDec == 0) {
+                result = "0" //Výsledek je 0
+            }
+            //Pokud je vše v pořádku:
+            if(numDec>0) {
+                while(numDec>0) { //dokud mi nezbyde nic, počítej
+                tmp = (numDec - numDec % numSysOut) / numSysOut //dočasné uložení hodnoty
+                tmpModulo = numDec % numSysOut //výpočet zbytku
+                tmpResult = tmpModulo //zapsání zbytku do mezivýsledku
+                if(numSysOut > 10 && tmpModulo > 9) { //Pokud je číselná soustava větší než 10 a hodnota přesahuje 9...
+                    tmpResult = str.charAt(tmpModulo) //...Použij písmeno
+                }
+                result = tmpResult + result //přičtení mezivýsledku ke konečnému výsledku
+                numDec = tmp //uložení dočasné hodnoty do hlavní proměnné, s kterou se pracuje
+                }
+            }
+            numOutput.value=result //Vypiš konečný výsledek na obrazovku
+        }
+    </script>
+</body>
+</html>
