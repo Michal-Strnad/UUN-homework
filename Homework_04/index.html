@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Generator jmen</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+<body>
+    <p>Počet zaměstnanců</p>
+    <input type="text" id="count">
+    <p>Minimální věk</p>
+    <input type="text" id="ageMin">
+    <p>Maximální věk</p>
+    <input type="text" id="ageMax">
+    <button onclick="generate()">Generuj</button>
+
+    <script>
+        const firstNames = ["Pavel","Marek","Jiří","Daniel","Petr","Honza","Milan","Mirek","David","Zdeněk", "Ludmila", "Zdena", "Kateřina", "Lucie", "Marie", "Zdislava", "Veronika", "Lenka", "Natálie", "Božena"]
+        const lastNames = ["Chroust","Dvořák","Novák","Samotný","Vystrčil","Vyskočil","Růžička","Douša","Urban","Přibyl","Chroustová","Dvořáková","Nováková","Samotná","Vystrčilová","Vyskočilová","Růžičková","Doušová","Urbanová","Přibylová"]
+        const workloads = ["10", "20", "30", "40"]
+        var time = new Date()
+
+        function generate() {
+            let age = {"min":document.getElementById("ageMin").value, "max":document.getElementById("ageMax").value}
+            let dataIn = {"count":document.getElementById("count").value,"age":age}
+
+            if(parseInt(age.min) < parseInt(age.max)) {
+                if(parseInt(age.min) > 14) {
+                    let dataOut = main(dataIn)
+                    for(let i = 0;i < dataOut.length;i++) {
+                    console.log(dataOut[i])
+                    }
+                    findValues(dataOut) //ZAVOLÁNÍ NOVÉ FUNKCE
+                } else {
+                    alert("Věk zaměstnance smí být minimálně 15 let")
+                }
+            } else {
+                alert("Minimální věk je vyšší než maximální")
+            }
+        }
+//------------------NOVÁ FUNKCE--------------------
+        function findValues(dtoIn2) {
+
+            //POČET ZAMĚSTNANCŮ
+
+            /*1. hodnota*/console.log("total: "+dtoIn2.length)
+
+            //WORKLOADS
+
+            var w10 = 0
+            var w20 = 0
+            var w30 = 0
+            var w40 = 0
+            for(let i = 0;i < dtoIn2.length;i++) {
+                switch (parseInt(dtoIn2[i].workload)) {
+                    case 10:
+                        w10++
+                        break;
+                    case 20:
+                        w20++
+                        break;
+                    case 30:
+                        w30++
+                        break;
+                    case 40:
+                        w40++
+                        break;
+                }
+            }
+            /*2. hodnota*/console.log("workload10: "+w10+"\nworkload20: "+w20+"\nworkload30: "+w30+"\nworkload40: "+w40)
+
+            //PRŮMĚRNÝ VĚK
+
+            let averageAge = 0
+            for(let i = 0; i < dtoIn2.length;i++) {
+                averageAge += time.getFullYear() - dtoIn2[i].birthdate.substr(0, 4)
+            }
+            averageAge /= dtoIn2.length
+            /*3. hodnota*/console.log("averageAge: "+averageAge)
+
+            //MINIMÁLNÍ A MAXIMÁLNÍ VĚK
+
+            let agesArray = new Array()
+            let sortAge = 0
+            for(let i = 0;i < dtoIn2.length;i++) {
+                agesArray[i] = time.getFullYear() - dtoIn2[i].birthdate.substr(0, 4)
+            }
+            agesArray.sort((x,y) => {return x-y})
+            /*4.hodnota*/console.log("minAge: "+ agesArray[0])
+            /*5, hodnota*/console.log("maxAge: "+ agesArray[dtoIn2.length-1])
+
+            //MEDIÁN VĚKU
+
+            let medianAge = 0
+            let medianAgeElements = dtoIn2.length%2
+            switch (medianAgeElements) {
+                case 1:
+                    medianAge = agesArray[(dtoIn2.length-1)/2]
+                    break;
+            
+                case 0:
+                    medianAge = (agesArray[dtoIn2.length/2-1] + agesArray[dtoIn2.length/2])/2
+                    break;
+            }
+            /*6. hodnota*/console.log("medianAge: "+medianAge)
+
+            //MEDIAN WORKLOAD
+
+            let medianWorkload = 0
+            let workloadsArray = new Array()
+            let medianWorkloadTemp = 0
+            for(i = 0;i < dtoIn2.length;i++) {
+                workloadsArray[i] = dtoIn2[i].workload
+            }
+            workloadsArray.sort((x,y) => {return x-y})
+            medianWorkloadTemp = dtoIn2.length%2
+            switch (medianWorkloadTemp) {
+                case 1:
+                    medianWorkload = workloadsArray[(dtoIn2.length-1)/2]
+                    break;
+            
+                case 0:
+                    medianWorkload = (workloadsArray[dtoIn2.length/2-1] + workloadsArray[dtoIn2.length/2])/2
+                    break;
+            }
+            /*7. hodnota*/console.log("medianWorkload: "+medianWorkload)
+
+            //AVERAGE WOOMAN WORKLOAD
+
+            let n = 0
+            let averageWoomanWorkload = 0
+            for(i = 0; i < dtoIn2.length;i++) {
+                if(dtoIn2[i].gender == "female") {
+                    averageWoomanWorkload += parseInt(dtoIn2[i].workload)
+                    n++
+                }
+            }
+            averageWoomanWorkload /= n
+            /*8. hodnota*/console.log("averageWoomanWorkload: "+averageWoomanWorkload)
+
+            //SORTOVANI PODLE WORKLOAD
+
+            n = 10
+            for(i = 0; i < 4; i++) {
+                for(ii = 0; ii < dtoIn2.length; ii++) {
+                    if(n == dtoIn2[ii].workload) {
+                        /*9. hodnota*/console.log(dtoIn2[ii])
+                    }
+                }
+                n += 10
+            }
+        }
+//-----------------Zbytek kódů již naprogramovaný v úkolu 03------------------------
+        function genNum(y,z) {
+            let x = Math.floor(Math.random() * y + z)
+            return x
+        }
+        function convertDate(tempAge) {
+            let year = time.getFullYear()
+            year = year-tempAge
+
+            var month = genNum(12, 1)
+            var day = genNum(31, 1)
+
+            tempDate = year+"-"+month+"-"+day+"T00:00:00.000Z"
+            return tempDate
+        }
+
+        function main(dtoIn) {
+            let tempName = ""
+            let tempLastName = ""
+            let tempGender = ""
+            let tempAge = 0
+            let tempWorkload = ""
+            let dtoOut = Array()
+
+            for(let i = 0; i < dtoIn.count;i++) {
+                let x = genNum(20,0)
+                tempName = firstNames[x]
+                if(x > 9) {
+                    x = genNum(10,10)
+                    tempGender = "female"
+                } else {
+                    x = genNum(10,0)
+                    tempGender = "male"
+                }
+                tempLastName = lastNames[x]
+
+                const minAge = parseInt(dtoIn.age.min)
+                const maxAge = parseInt(dtoIn.age.max)
+                tempAge = genNum(maxAge-minAge+1, minAge)
+                let tempDate = convertDate(tempAge)
+
+                tempWorkload = workloads[genNum(4, 0)]
+
+                dtoOut[i] = {"gender":tempGender,"birthdate":tempDate,"name":tempName,"surname":tempLastName,"workload":tempWorkload}
+            }
+            return dtoOut
+        }
+    </script>
+</body>
+</html>
